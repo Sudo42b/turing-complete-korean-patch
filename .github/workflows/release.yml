@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build all platforms
+        run: |
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o patcher_windows_amd64.exe patcher.go
+          CGO_ENABLED=0 GOOS=linux   GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o patcher_linux_amd64       patcher.go
+          CGO_ENABLED=0 GOOS=darwin  GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o patcher_macos_amd64       patcher.go
+          CGO_ENABLED=0 GOOS=darwin  GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o patcher_macos_arm64       patcher.go
+
+      - name: Generate checksums
+        run: |
+          sha256sum patcher_windows_amd64.exe \
+                    patcher_linux_amd64       \
+                    patcher_macos_amd64       \
+                    patcher_macos_arm64       > checksums.sha256
+          cat checksums.sha256
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: |
+            patcher_windows_amd64.exe
+            patcher_linux_amd64
+            patcher_macos_amd64
+            patcher_macos_arm64
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            patcher_windows_amd64.exe
+            patcher_linux_amd64
+            patcher_macos_amd64
+            patcher_macos_arm64
+            checksums.sha256
+          name: "한국어 패치 ${{ github.ref_name }}"
+          body: |
+            ## Turing Complete 한국어 패치 ${{ github.ref_name }}
+
+            **지원 게임 버전: `0.1059 Beta`**
+
+            ### 설치 방법
+            - **Windows**: `patcher_windows_amd64.exe` 더블클릭
+            - **Linux**: `chmod +x patcher_linux_amd64 && ./patcher_linux_amd64`
+            - **macOS Intel**: `chmod +x patcher_macos_amd64 && ./patcher_macos_amd64`
+            - **macOS Apple Silicon**: `chmod +x patcher_macos_arm64 && ./patcher_macos_arm64`
+
+            게임 실행 후 **Options → Language → 한국어** 선택
+
+            ### 무결성 검증
+            `checksums.sha256` 파일로 다운로드한 파일이 변조되지 않았는지 확인할 수 있습니다.
+
+            ```bash
+            # Linux / macOS
+            sha256sum -c checksums.sha256
+
+            # Windows (PowerShell)
+            Get-FileHash patcher_windows_amd64.exe -Algorithm SHA256
+            # 위 결과를 checksums.sha256 파일의 해시값과 비교
+            ```
+
+            > 이 바이너리는 GitHub Actions에서 소스코드로부터 직접 빌드되었으며,
+            > [빌드 증명(Build Provenance)](../../actions) 을 통해 검증 가능합니다.

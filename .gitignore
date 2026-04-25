@@ -1,0 +1,13 @@
+# 빌드 결과물 (GitHub Actions에서 자동 생성됨)
+patcher_linux_amd64
+patcher_windows_amd64.exe
+patcher_macos_amd64
+patcher_macos_arm64
+checksums.sha256
+
+# Python
+__pycache__/
+*.pyc
+
+# Go
+*.test

@@ -1,0 +1,82 @@
+name: Check Game Update
+
+on:
+  schedule:
+    - cron: '0 9 * * *'   # 매일 오전 9시 (UTC) = 한국시간 오후 6시
+  workflow_dispatch:        # 수동 실행 가능
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest Steam news
+        id: steam
+        run: |
+          RESPONSE=$(curl -s "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1444480&count=1&maxlength=500&feeds=steam_community_announcements")
+          LATEST_GID=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['appnews']['newsitems'][0]['gid'])")
+          LATEST_TITLE=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['appnews']['newsitems'][0]['title'])")
+          LATEST_URL=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['appnews']['newsitems'][0]['url'])")
+          LATEST_DATE=$(echo "$RESPONSE" | python3 -c "import sys,json,datetime; d=json.load(sys.stdin); ts=d['appnews']['newsitems'][0]['date']; print(datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d'))")
+          echo "gid=$LATEST_GID"     >> $GITHUB_OUTPUT
+          echo "title=$LATEST_TITLE" >> $GITHUB_OUTPUT
+          echo "url=$LATEST_URL"     >> $GITHUB_OUTPUT
+          echo "date=$LATEST_DATE"   >> $GITHUB_OUTPUT
+
+      - name: Compare with known version
+        id: compare
+        run: |
+          KNOWN_GID=$(cat last_known_news.txt)
+          LATEST_GID="${{ steps.steam.outputs.gid }}"
+          echo "known=$KNOWN_GID"
+          echo "latest=$LATEST_GID"
+          if [ "$KNOWN_GID" != "$LATEST_GID" ]; then
+            echo "updated=true" >> $GITHUB_OUTPUT
+          else
+            echo "updated=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create issue if updated
+        if: steps.compare.outputs.updated == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[게임 업데이트] ${{ steps.steam.outputs.date }} - ${{ steps.steam.outputs.title }}`,
+              body: [
+                '## 게임 공지/업데이트 감지',
+                '',
+                `**공지 제목:** ${{ steps.steam.outputs.title }}`,
+                `**날짜:** ${{ steps.steam.outputs.date }}`,
+                `**링크:** ${{ steps.steam.outputs.url }}`,
+                '',
+                '## 체크리스트',
+                '- [ ] 공지 내용 확인 (번역에 영향이 있는 업데이트인지 확인)',
+                '- [ ] 게임 버전 확인 (`Turing Complete.pck` 빌드 ID 비교)',
+                '- [ ] PCK 구조 변경 여부 확인 (globals.gdc, 폰트 엔트리)',
+                '- [ ] 번역 파일 신규 항목 확인',
+                '- [ ] 패치 적용 테스트',
+                '- [ ] 신규 릴리즈 배포',
+                '',
+                '---',
+                '_이 이슈는 Steam 공지 변경 감지 시 자동으로 생성됩니다._'
+              ].join('\n'),
+              labels: ['game-update']
+            });
+
+      - name: Update known version file
+        if: steps.compare.outputs.updated == 'true'
+        run: |
+          echo "${{ steps.steam.outputs.gid }}" > last_known_news.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add last_known_news.txt
+          git commit -m "chore: update known news GID to ${{ steps.steam.outputs.gid }}"
+          git push
