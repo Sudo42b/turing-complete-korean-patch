@@ -20,6 +20,9 @@ jobs:
         with:
           go-version: '1.22'
 
+      - name: Vet
+        run: go vet ./...
+
       - name: Build all platforms
         run: |
           CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o patcher_windows_amd64.exe patcher.go
@@ -57,7 +60,10 @@ jobs:
           body: |
             ## Turing Complete 한국어 패치 ${{ github.ref_name }}
 
-            **지원 게임 버전: `0.1059 Beta`**
+            **지원 게임 버전: 2026-08-17 빌드(Steam buildid 24685975) 이후**
+
+            패처는 설치 시점에 게임이 배포한 원문 목록을 읽어 **영문 원문으로 대조**하므로,
+            게임 업데이트로 번역 ID 가 바뀌어도 다시 실행하면 됩니다.
 
             ### 설치 방법
             - **Windows**: `patcher_windows_amd64.exe` 더블클릭
@@ -66,6 +72,9 @@ jobs:
             - **macOS Apple Silicon**: `chmod +x patcher_macos_arm64 && ./patcher_macos_arm64`
 
             게임 실행 후 **Options → Language → 한국어** 선택
+
+            ### 제거
+            패처를 `-restore` 옵션으로 실행하면 원본 폰트를 되돌리고 `Korean.txt` 를 지웁니다.
 
             ### 무결성 검증
             `checksums.sha256` 파일로 다운로드한 파일이 변조되지 않았는지 확인할 수 있습니다.

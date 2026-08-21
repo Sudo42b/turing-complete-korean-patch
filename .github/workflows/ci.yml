@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  go:
+    name: 패처 빌드 검증
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Build (all release targets)
+        run: |
+          for target in "windows amd64" "linux amd64" "darwin amd64" "darwin arm64"; do
+            set -- $target
+            echo "--- $1/$2"
+            CGO_ENABLED=0 GOOS=$1 GOARCH=$2 go build -trimpath -o /dev/null patcher.go
+          done
+
+  python:
+    name: 툴체인 검증
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile check
+        run: python -m compileall -q tools
+
+      - name: 사전 무결성 확인
+        run: |
+          python - <<'EOF'
+          import io, json, sys
+          sys.path.insert(0, 'tools')
+          import tcloc
+
+          payload = json.load(io.open('translation_dict.json', encoding='utf-8'))
+          mapping = payload['map']
+          assert mapping, 'translation_dict.json 이 비어 있습니다'
+          assert payload['entry_count'] == len(mapping), 'entry_count 불일치'
+
+          # 사전 키는 정규화된 영문 원문이어야 한다.
+          bad = [k for k in mapping if tcloc.normalize(k) != k]
+          assert not bad, '정규화되지 않은 키 %d개 (예: %r)' % (len(bad), bad[0][:60])
+
+          # legacy 번역 원본이 파싱되는지 확인한다.
+          legacy = tcloc.parse('legacy/Korean_legacy.txt')
+          ids = tcloc.parse('legacy/_ids_legacy.txt', id_prefixed=True)
+          assert len(legacy) > 2000, '구 번역 항목 수 이상: %d' % len(legacy)
+          assert len(ids) > 1500, '구 원문 목록 항목 수 이상: %d' % len(ids)
+
+          print('사전 %d개, 구 번역 %d개, 구 원문 %d개 — 정상'
+                % (len(mapping), len(legacy), len(ids)))
+          EOF
+
+      - name: 서식 무결성 검사
+        run: |
+          python - <<'EOF'
+          import io, json, re, sys
+          sys.path.insert(0, 'tools')
+
+          mapping = json.load(io.open('translation_dict.json', encoding='utf-8'))['map']
+
+          # 게임이 직접 렌더링하는 토큰은 번역하면 안 된다.
+          FORBIDDEN = ('[ON]', '[OFF]', '[ANY]', '[명령어]', '[저장]', '[불러오기]')
+          hits = [(t, v) for t in FORBIDDEN for v in mapping.values() if t in v]
+          assert not hits, '번역된 특수 토큰 %d건 (예: %r)' % (len(hits), hits[0][0])
+
+          # 치환 자리와 피연산자는 원문과 개수가 같아야 한다.
+          PH = re.compile(r'\{[^}\n]*\}')
+          OP = re.compile(r'%[A-Za-z_][A-Za-z_0-9]*')
+          bad = []
+          for k, v in mapping.items():
+              # 원문이 `{{` 로 중괄호를 이스케이프하면 자리표시자 추출이 어긋난다.
+              if '{{' in k:
+                  continue
+              for rx in (PH, OP):
+                  if sorted(rx.findall(k)) != sorted(rx.findall(v)):
+                      bad.append(k[:50])
+                      break
+          assert not bad, '치환 자리 불일치 %d건: %r' % (len(bad), bad[:5])
+
+          print('사전 %d개 — 특수 토큰 정상, 치환 자리 전부 일치' % len(mapping))
+          EOF
+
+      - name: 파서 왕복 검증
+        run: |
+          python - <<'EOF'
+          import os, sys, tempfile
+          sys.path.insert(0, 'tools')
+          import tcloc
+
+          src = tcloc.parse('legacy/Korean_legacy.txt')
+          with tempfile.TemporaryDirectory() as d:
+              path = os.path.join(d, 'roundtrip.txt')
+              tcloc.dump(src, path)
+              back = tcloc.parse(path)
+
+          assert len(src) == len(back), '항목 수 불일치: %d != %d' % (len(src), len(back))
+          for a, b in zip(src, back):
+              assert (a.section, a.id, a.text) == (b.section, b.id, b.text), \
+                  '왕복 불일치: %s / %s' % (a.section, a.id)
+          print('%d개 항목 왕복 일치' % len(src))
+          EOF
