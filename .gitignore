@@ -11,3 +11,7 @@ __pycache__/
 
 # Go
 *.test
+
+# 번역 작업용 임시 파일 (사전에 반영되면 재생성 가능)
+work/
+todo.txt
