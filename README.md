@@ -143,6 +143,14 @@ python tools/apply_patch.py
 
 ---
 
+## 게임패드로 플레이하기 (Steam Input)
+
+게임은 패드를 지원하지 않지만, `steam-input/` 의 Steam Input 레이아웃을 쓰면 패드 입력을
+마우스·키보드로 바꿔 플레이할 수 있습니다. 게임 파일은 건드리지 않습니다.
+설치와 조작법은 [steam-input/README.md](steam-input/README.md) 를 보세요.
+
+---
+
 ## 저장소 구성
 
 ```
@@ -157,6 +165,10 @@ tools/
   report_missing.py     미번역 작업 목록 추출
   merge_translated.py   번역한 작업 파일을 사전에 반영
   lint_dict.py          사전 서식 무결성 검사 (--fix 로 교정)
+
+steam-input/
+  controller_xboxone_turing_complete_ko.vdf   Steam Input 게임패드 레이아웃
+  README.md             설치·조작법
 
 legacy/
   Korean_legacy.txt     구 빌드용 번역 원본 2,161개 (사전 생성 소스)

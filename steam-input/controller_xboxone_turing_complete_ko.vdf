@@ -1,0 +1,651 @@
+"controller_mappings"
+{
+	"version"		"3"
+	"game"		"Turing Complete"
+	"title"		"Turing Complete 게임패드 (한국어 패치)"
+	"description"		"오른쪽 스틱 = 마우스, RT/LT = 좌/우클릭, 십자키 = 부품 메뉴 1~4, 왼쪽 스틱 라디얼 = 하위 메뉴 글자키(Q~V). A 회전, B 취소, X 되돌리기, Y Shift(다중 선택), 범퍼 확대/축소, R3 가운데 버튼(화면 이동)."
+	"controller_type"		"controller_xboxone"
+	"localization"
+	{
+		"koreana"
+		{
+			"title"		"Turing Complete 게임패드 (한국어 패치)"
+			"description"		"오른쪽 스틱 = 마우스, RT/LT = 좌/우클릭, 십자키 = 부품 메뉴 1~4, 왼쪽 스틱 라디얼 = 하위 메뉴 글자키(Q~V). A 회전, B 취소, X 되돌리기, Y Shift(다중 선택), 범퍼 확대/축소, R3 가운데 버튼(화면 이동)."
+		}
+		"english"
+		{
+			"title"		"Turing Complete Gamepad (Korean patch)"
+			"description"		"Right stick = mouse, RT/LT = left/right click, D-pad = component menus 1-4, left stick radial = sub-menu letter hotkeys (Q-V). A rotate, B cancel, X undo, Y shift (multi-select), bumpers zoom, R3 middle mouse (pan)."
+		}
+	}
+	"group"
+	{
+		"id"		"0"
+		"mode"		"four_buttons"
+		"inputs"
+		{
+			"button_a"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press SPACE, 회전 (Rotate)"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"button_b"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press ESCAPE, 뒤로 / 취소"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"button_x"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press LEFT_CONTROL, 되돌리기 (Undo)"
+							"binding"		"key_press Z, 되돌리기 (Undo)"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"button_y"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press LEFT_SHIFT, 다중 선택 (Shift 누른 채 RT 드래그)"
+						}
+					}
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"1"
+		"mode"		"dpad"
+		"inputs"
+		{
+			"dpad_north"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press 1, 메뉴 1: 비트 부품"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"dpad_east"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press 2, 메뉴 2: 워드 부품"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"dpad_south"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press 3, 메뉴 3: 기타 (메모리 등)"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"dpad_west"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press 4, 메뉴 4: 입출력"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+		}
+		"settings"
+		{
+			"edge_binding_radius"		"24996"
+		}
+	}
+	"group"
+	{
+		"id"		"2"
+		"mode"		"joystick_mouse"
+		"inputs"
+		{
+			"click"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"mouse_button MIDDLE, 가운데 버튼 (누른 채 이동 = 화면 이동)"
+						}
+					}
+				}
+			}
+		}
+		"settings"
+		{
+			"sensitivity"		"45"
+			"acceleration"		"40"
+			"joystick_smoothing"		"1"
+		}
+	}
+	"group"
+	{
+		"id"		"3"
+		"mode"		"radial_menu"
+		"inputs"
+		{
+			"touch_menu_button_0"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press Q, Q"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_1"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press W, W"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_2"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press E, E"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_3"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press R, R"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_4"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press T, T"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_5"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press A, A"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_6"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press S, S"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_7"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press D, D"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_8"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press F, F"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_9"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press G, G"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_10"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press Z, Z"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_11"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press X, X"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_12"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press C, C"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_13"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press V, V"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_14"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press 6, 메뉴 6: 개발용"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"touch_menu_button_15"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press ESCAPE, 메뉴 닫기"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"click"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press 5, 메뉴 5: 커스텀 부품"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+		}
+		"settings"
+		{
+			"touchmenu_button_count"		"16"
+			"touchmenu_button_fire_type"		"2"
+			"touchmenu_opacity"		"85"
+			"touchmenu_position_x"		"50"
+			"touchmenu_position_y"		"50"
+		}
+	}
+	"group"
+	{
+		"id"		"4"
+		"mode"		"trigger"
+		"inputs"
+		{
+			"edge"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"mouse_button RIGHT, 우클릭 (삭제 / 선택 해제)"
+						}
+					}
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"5"
+		"mode"		"trigger"
+		"inputs"
+		{
+			"edge"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"mouse_button LEFT, 좌클릭 (배치 / 배선)"
+						}
+					}
+				}
+			}
+		}
+	}
+	"group"
+	{
+		"id"		"6"
+		"mode"		"switches"
+		"inputs"
+		{
+			"button_escape"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press LEFT_CONTROL, 붙여넣기 (Paste)"
+							"binding"		"key_press V, 붙여넣기 (Paste)"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"button_menu"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"key_press LEFT_CONTROL, 복사 (Copy)"
+							"binding"		"key_press C, 복사 (Copy)"
+						}
+						"settings"
+						{
+							"repeat_rate"		"0"
+						}
+					}
+				}
+			}
+			"left_bumper"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"mouse_wheel SCROLL_DOWN, 축소"
+						}
+					}
+				}
+			}
+			"right_bumper"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"mouse_wheel SCROLL_UP, 확대"
+						}
+					}
+				}
+			}
+			"button_capture"
+			{
+				"activators"
+				{
+					"Full_Press"
+					{
+						"bindings"
+						{
+							"binding"		"controller_action SCREENSHOT"
+						}
+					}
+				}
+			}
+		}
+	}
+	"preset"
+	{
+		"id"		"0"
+		"name"		"Default"
+		"group_source_bindings"
+		{
+			"6"		"switch active"
+			"0"		"button_diamond active"
+			"1"		"dpad active"
+			"3"		"joystick active"
+			"2"		"right_joystick active"
+			"4"		"left_trigger active"
+			"5"		"right_trigger active"
+		}
+	}
+	"settings"
+	{
+		"left_trackpad_mode"		"0"
+		"right_trackpad_mode"		"0"
+	}
+}
